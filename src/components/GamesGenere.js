@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export class GamesGenere extends Component {
     static displayName = "Fichas";
@@ -26,10 +27,10 @@ export class GamesGenere extends Component {
                 </thead>
                 <tbody>
                     {games.map(game =>
-                        <tr key={game.usableUrl}>
+                        <tr key={game.url}>
                             <td>{game.Name}</td>
-                            <td>{game.publishedYear.substring(0, 4)}</td>
-                            <td><Link tag={Link} to={"/fichas/" + game.usableUrl + ".html"}>Detalles</Link></td>
+                            <td>{game.Published.substring(0, 4)}</td>
+                            <td><Link tag={Link} to={"/fichas/" + game.url + ".html"}>Detalles</Link></td>
                         </tr>
                     )}
                 </tbody>
@@ -57,8 +58,11 @@ export class GamesGenere extends Component {
     }
 
     async populateGamesData() {
-        const response = await fetch('../Data/ProcesedData.json');
-        const data = await response.json();
-        this.setState({ games: data.filter((x) => x.generes.includes(this.state.GenereID)).sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+
+        axios.get('http://rfmv.hypercompumega.net/api/games/?genere='+this.state.GenereID).then(response => {
+            console.log(response.data.games);
+            this.setState({ games: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+            });
+
     }
 }

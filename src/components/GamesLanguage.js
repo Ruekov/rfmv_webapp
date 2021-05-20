@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export class GamesLanguage extends Component {
     static displayName = "Fichas";
@@ -7,7 +8,7 @@ export class GamesLanguage extends Component {
     constructor(props) {
         super(props);
         const { params } = props.match;
-        this.state = { games: [], loading: true, LangID: params.LangID.replaceAll("-", " ") };
+        this.state = { games: [], loading: true, Input: params.LangID, LangID: params.LangID.replaceAll("-", " ") };
     }
 
     componentDidMount() {
@@ -26,10 +27,10 @@ export class GamesLanguage extends Component {
                 </thead>
                 <tbody>
                     {games.map(game =>
-                        <tr key={game.usableUrl}>
+                        <tr key={game.url}>
                             <td>{game.Name}</td>
-                            <td>{game.publishedYear.substring(0, 4)}</td>
-                            <td><Link tag={Link} to={"/fichas/" + game.usableUrl + ".html"}>Detalles</Link></td>
+                            <td>{game.Published.substring(0, 4)}</td>
+                            <td><Link tag={Link} to={"/fichas/" + game.url + ".html"}>Detalles</Link></td>
                         </tr>
                     )}
                 </tbody>
@@ -57,8 +58,11 @@ export class GamesLanguage extends Component {
     }
 
     async populateGamesData() {
-        const response = await fetch('../Data/ProcesedData.json');
-        const data = await response.json();
-        this.setState({ games: data.filter((x) => x.languages.includes(this.state.LangID)).sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+    
+        axios.get('http://rfmv.hypercompumega.net/api/games/?language='+this.state.Input).then(response => {
+            this.setState({ games: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+            });
+
+
     }
 }
