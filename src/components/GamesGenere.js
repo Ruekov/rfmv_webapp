@@ -29,7 +29,7 @@ export class GamesGenere extends Component {
                     {games.map(game =>
                         <tr key={game.url}>
                             <td>{game.Name}</td>
-                            <td>{game.Published.substring(0, 4)}</td>
+                            <td>{game.Published != null ? game.Published.substring(0, 4) : " "}</td>
                             <td><Link tag={Link} to={"/fichas/" + game.url + ".html"}>Detalles</Link></td>
                         </tr>
                     )}
@@ -60,7 +60,6 @@ export class GamesGenere extends Component {
     async populateGamesData() {
 
         axios.get('http://rfmv.hypercompumega.net/api/games/?genere='+this.state.GenereID).then(response => {
-            console.log(response.data.games);
             this.setState({ games: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
             });
 

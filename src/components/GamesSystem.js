@@ -29,7 +29,7 @@ export class GamesSystem extends Component {
                     {games.map(game =>
                         <tr key={game.url}>
                             <td>{game.Name}</td>
-                            <td>{game.Published.substring(0, 4)}</td>
+                            <td>{game.Published != null ? game.Published.substring(0, 4) : " " }</td>
                             <td><Link tag={Link} to={"/fichas/" + game.url + ".html"}>Detalles</Link></td>
                         </tr>
                     )}
