@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export class GameDetail extends Component {
     static displayName = "Fichas";
@@ -17,37 +18,37 @@ export class GameDetail extends Component {
 
     static renderGamesTable(game) {
 
+        
         return (
             <div>
                 <h1>{game.Name}</h1>
                 <br />
-                <label>Nombre:</label><i> {game.Name}</i><br />
-                <label>Año:</label> <i>{game.publishedYear.substring(0, 4)}</i><br />
-                <label>Idioma:</label> {game.languages && game.languages.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/idioma/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Nombre:</label><i> {game.Name}</i><br />        
+                <label>Idioma:</label> {game.Languages && game.Languages.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/idioma/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>País:</label>{game.countries && game.countries.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/pais/' + i + '.html'}>{i}</a>&nbsp;</span>;
+                <label>País:</label>{game.Countries && game.Countries.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/pais/' + i.Name + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Desarrolladores:</label> {game.developers && game.developers.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/compania/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Desarrolladores:</label> {game.Developers && game.Developers.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/compania/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Editores:</label> {game.publishers && game.publishers.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/compania/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Editores:</label> {game.Publishers && game.Publishers.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/compania/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Plataformas:</label>{game.systems && game.systems.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/plataforma/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Plataformas:</label>{game.Platforms && game.Platforms.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/plataforma/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Temática:</label> {game.themes && game.themes.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/tema/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Temática:</label> {game.Themes && game.Themes.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/tema/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Géneros:</label> {game.generes && game.generes.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/genero/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Géneros:</label> {game.Generes && game.Generes.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/genero/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Tipo de FMV:</label>{game.types && game.types.map(function (i) {
-                    return <span key={i}>&nbsp;<a href={'./fichas/tipo/' + i.replaceAll(" ", "-") + '.html'}>{i}</a>&nbsp;</span>;
+                <label>Tipo de FMV:</label>{game.Styles && game.Styles.map(function (i) {
+                    return <span key={i.Name}>&nbsp;<a href={'./fichas/tipo/' + i.Name.replaceAll(" ", "-") + '.html'}>{i.Name}</a>&nbsp;</span>;
                 })}<br />
-                <label>Anotaciones:</label> <i>{game.remarks}</i><br />
+                <label>Anotaciones:</label> <i>{game.Remarks}</i><br />
             </div>
         );
     }
@@ -69,12 +70,11 @@ export class GameDetail extends Component {
     }
 
     async populateGamesData() {
-        const response = await fetch('../Data/ProcesedData.json');
-        var data = await response.json();
 
-        var game = data.find((x) => x.usableUrl === this.state.GameID);
+        axios.get('http://rfmv.hypercompumega.net/api/games/?url='+ this.state.GameID).then(response => {
+            this.setState({ games: response.data.game, loading: false });
+            });
 
-        this.setState({ games: game, loading: false });
 
     }
 }

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export class Games extends Component {
     static displayName = "Fichas";
 
     constructor(props) {
         super(props);
-        this.state = { forecasts: [], loading: true };
+        this.state = { games: [], loading: true };
     }
 
     componentDidMount() {
@@ -27,12 +28,12 @@ export class Games extends Component {
                 </thead>
                 <tbody>
                     {games.map(game =>
-                        <tr key={game.usableUrl}>
+                        <tr key={game.url}>
                             <td>{game.Name}</td>
-                            <td>{game.publishedYear.substring(0, 4)}</td>
-                            <td>{game.countries.join(", ")}</td>
-                            <td>{game.developers.join(", ")}</td>
-                            <td><Link tag={game.usableUrl} to={"/fichas/" + game.usableUrl + ".html"}>Detalles</Link></td>
+                            <td>{game.Published === null ?  " 0 " : game.Published.substring(0, 4) }</td>
+                            <td>{game.Countries}</td>
+                            <td>{game.Developers}</td>
+                            <td><Link tag={game.url} to={"/fichas/" + game.url + ".html"}>Detalles</Link></td>
                         </tr>
                     )}
                 </tbody>
@@ -43,7 +44,7 @@ export class Games extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Cargando...</em></p>
-            : Games.renderGamesTable(this.state.forecasts);
+            : Games.renderGamesTable(this.state.games);
 
         return (
             <div>
@@ -57,8 +58,10 @@ export class Games extends Component {
     }
 
     async populateGamesData() {
-        const response = await fetch('../Data/ProcesedData.json');
-        const data = await response.json();
-        this.setState({ forecasts: data.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+
+        axios.get('http://rfmv.hypercompumega.net/api/games/').then(response => {
+            this.setState({ games: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
+            });
+
     }
 }
