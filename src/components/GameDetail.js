@@ -71,7 +71,7 @@ export class GameDetail extends Component {
 
     async populateGamesData() {
 
-        axios.get('http://rfmv.hypercompumega.net/api/games/?url='+ this.state.GameID).then(response => {
+        axios.get('/api/games/?url='+ this.state.GameID).then(response => {
             this.setState({ games: response.data.game, loading: false });
             });
 

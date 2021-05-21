@@ -59,7 +59,7 @@ export class GamesTheme extends Component {
 
     async populateGamesData() {
       
-        axios.get('http://rfmv.hypercompumega.net/api/games/?theme='+ this.state.Input).then(response => {
+        axios.get('/api/games/?theme='+ this.state.Input).then(response => {
             this.setState({ games: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
             });
 

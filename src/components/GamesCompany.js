@@ -67,11 +67,11 @@ export class GamesCompany extends Component {
 
     async populateGamesData() {
 
-        axios.get('http://rfmv.hypercompumega.net/api/games/?developer=' + this.state.Input).then(response => {
+        axios.get('/api/games/?developer=' + this.state.Input).then(response => {
             this.setState({ gamesDeveloped: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
         });
 
-        axios.get('http://rfmv.hypercompumega.net/api/games/?publisher=' + this.state.Input).then(response => {
+        axios.get('/api/games/?publisher=' + this.state.Input).then(response => {
             this.setState({ gamesEdited: response.data.games.sort((a, b) => (a.Name > b.Name) ? 1 : ((b.Name > a.Name) ? -1 : 0)), loading: false });
         });
 
